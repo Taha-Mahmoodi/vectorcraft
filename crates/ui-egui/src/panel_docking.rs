@@ -684,7 +684,11 @@ pub(crate) fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) -> bool {
         // (square fills would cover its rounded corners). Floating groups get the fills below.
         style.background = egui::Color32::TRANSPARENT;
         style.tab_background = egui::Color32::TRANSPARENT;
-        style.active_background = t.button;
+        // Underlined tabs (Flat) have no fill: the line under the one in front is drawn below.
+        style.active_background = match t.tab_style {
+            crate::theme::TabStyle::Pill => t.button,
+            crate::theme::TabStyle::Underline => egui::Color32::TRANSPARENT,
+        };
         style.text = t.text_strong;
         style.inactive_text = t.text_dim;
         style.border = egui::Stroke::new(1.0, t.border);
@@ -711,6 +715,9 @@ pub(crate) fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) -> bool {
             |_| craft_ui::docking::PanelLimits { min: egui::vec2(220.0, 80.0), ..Default::default() },
             &mut content,
         );
+        if t.tab_style == crate::theme::TabStyle::Underline {
+            underline_active_tabs(ui.ctx(), area, &display, &t);
+        }
         for (id, params) in content.commands {
             if let Err(error) = app.run(id, params) {
                 app.ui.status = error;
@@ -725,7 +732,8 @@ pub(crate) fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) -> bool {
             .resizable(true)
             .frame(egui::Frame::NONE);
         let panel = if collapsed { panel.exact_size(38.0).resizable(false) } else { panel };
-        let shown = panel.show(ui, |ui| crate::theme::card(ui, &t, egui::Margin { left: 0, right: 6, top: 6, bottom: 6 }, &mut draw));
+        let shown = panel
+            .show(ui, |ui| crate::theme::card(ui, &t, egui::Margin { left: 0, right: 6, top: 6, bottom: 6 }, crate::theme::Edge::Left, &mut draw));
         ui.ctx().data_mut(|data| data.insert_temp(crate::floating::dock_rect_id(), shown.response.rect));
         crate::dock::note_dock_width(app, ui.ctx(), crate::dock::SHARED_DOCK_PANEL);
         shown.inner
@@ -813,6 +821,29 @@ pub(crate) fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) -> bool {
     true
 }
 
+/// The 2 pt line in the text colour under the tab in front of each group of `display`, for
+/// underlined tabs ([`crate::theme::TabStyle::Underline`]). The shared surface draws the labels
+/// centred in tabs 24 pt wider than them.
+fn underline_active_tabs(ctx: &egui::Context, area: egui::Id, display: &Layout<String>, t: &crate::theme::Tokens) {
+    let mut front: Vec<&String> = display.floating.iter().filter_map(|group| group.panels.get(group.active)).collect();
+    let mut nodes: Vec<&Node<String>> = display.root.iter().collect();
+    while let Some(node) = nodes.pop() {
+        match node {
+            Node::Split { first, second, .. } => nodes.extend([first.as_ref(), second.as_ref()]),
+            Node::Tabs { panels, active } => front.extend(panels.get(*active)),
+            Node::Stack { .. } => {}
+        }
+    }
+    for panel in front {
+        let Some(tab) = ctx.read_response(area.with(("tab", panel))) else { continue };
+        let label = tab.rect.shrink2(egui::vec2(12.0, 0.0));
+        if label.width() > 0.0 {
+            let line = egui::Rect::from_min_max(egui::pos2(label.left(), label.bottom() - 2.0), label.right_bottom());
+            ctx.layer_painter(tab.layer_id).rect_filled(line, 0.0, t.text_strong);
+        }
+    }
+}
+
 fn icon_rail(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
     let t = crate::theme::Tokens::get(ui.ctx());
     let column = egui::Panel::right("shared-panel-icons")
@@ -820,7 +851,7 @@ fn icon_rail(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
         .resizable(false)
         .frame(egui::Frame::NONE)
         .show(ui, |ui| {
-            crate::theme::card(ui, &t, egui::Margin { left: 3, right: 3, top: 6, bottom: 6 }, |ui| {
+            crate::theme::card(ui, &t, egui::Margin { left: 3, right: 3, top: 6, bottom: 6 }, crate::theme::Edge::Left, |ui| {
                 egui::ScrollArea::vertical().id_salt("shared-panel-icons-scroll").show(ui, |ui| {
                     ui.spacing_mut().item_spacing.y = 2.0;
                     for &(id, label, icon) in crate::state::ICON_PANEL_GROUPS
