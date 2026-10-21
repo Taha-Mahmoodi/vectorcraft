@@ -85,16 +85,16 @@ impl Accent {
     }
 }
 
-/// User Interface › Color Scheme: Modern (the default: slate greys and the chosen accent),
-/// Classic (the neutral greys and blue accent of earlier versions) or Flat (neutral greys, a blue
-/// accent, and the toolbar, rail and dock flush with the window's edges instead of cards). The
+/// User Interface › Color Scheme: Flat (the default: neutral greys, a blue accent, and the toolbar,
+/// rail and dock flush with the window's edges instead of cards), Modern (slate greys, cards and the
+/// chosen accent) or Classic (the neutral greys and blue accent of earlier versions, on cards). The
 /// layout is the same in all three; Flat's look comes from its tokens ([`Tokens::cards`],
 /// [`Tokens::tab_style`]).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Scheme {
-    #[default]
     Modern,
     Classic,
+    #[default]
     Flat,
 }
 
@@ -606,7 +606,8 @@ impl Tokens {
     }
 
     pub fn get(ctx: &egui::Context) -> Tokens {
-        ctx.data(|d| d.get_temp::<Tokens>(egui::Id::NULL)).unwrap_or_else(|| Tokens::for_brightness(Brightness::default()))
+        ctx.data(|d| d.get_temp::<Tokens>(egui::Id::NULL))
+            .unwrap_or_else(|| Tokens::for_scheme(Scheme::default(), Brightness::default(), Accent::default()))
     }
     /// Corners of controls.
     pub fn cr(&self) -> CornerRadius {
@@ -869,5 +870,12 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// Flat is the default, in the engine's preferences as in the UI's fallback.
+    #[test]
+    fn flat_is_the_default_scheme() {
+        assert_eq!(Scheme::default(), Scheme::Flat);
+        assert_eq!(Scheme::parse(&vectorcraft_engine::Prefs::default().ui_color_scheme), Some(Scheme::default()));
     }
 }
