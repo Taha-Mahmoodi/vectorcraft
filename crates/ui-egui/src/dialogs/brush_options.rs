@@ -304,7 +304,7 @@ pub(super) fn stroke_preview(app: &VectorcraftApp, ui: &mut egui::Ui, ty: &str, 
     def.insert("type".into(), json!(ty));
     let (r, _) = ui.allocate_exact_size(size, Sense::hover());
     let doc = app.session.active().map_or_else(|| std::sync::Arc::new(vectorcraft_doc::Document::new(1.0, 1.0)), |st| st.doc.clone());
-    crate::panels::brushes::chip(ui, r, (&doc, crate::panels::symbols::resources_key(&doc)), &Value::Object(def));
+    crate::panels::brushes::chip(ui, r, &doc, &Value::Object(def));
     ui.painter().rect_stroke(r, 0.0, Stroke::new(1.0, Tokens::get(ui.ctx()).input_border), egui::StrokeKind::Inside);
 }
 

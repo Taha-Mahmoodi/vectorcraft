@@ -35,14 +35,33 @@ pub fn brushes(app: &mut VectorcraftApp) -> (Vec<(String, String)>, Option<Strin
     (list, v["current"].as_str().map(str::to_string))
 }
 
-/// The document whose resources (the patterns, symbols, swatches and images brush art uses) a
-/// stroke preview renders with, and [`super::symbols::resources_key`] of it.
-pub(crate) type Resources<'a> = (&'a Document, u64);
+/// The cache key of the stroke preview of brush definition `def` in `doc`: the definition and
+/// the identity of the patterns and symbols its art shows ([`super::symbols::deps_key`]), so the
+/// preview renders again when one of those changes and stays cached when anything else does.
+fn preview_key(doc: &Document, def: &Value) -> String {
+    use std::hash::{Hash, Hasher};
+    let text = def.to_string();
+    let mut h = std::collections::hash_map::DefaultHasher::new();
+    text.hash(&mut h);
+    let deps = super::symbols::cached_deps_key(doc, h.finish(), || {
+        // The art of a scatter, art or pattern brush (the others have none).
+        let art: Vec<Node> = ["art", "side", "outer_corner", "inner_corner", "start", "end"]
+            .iter()
+            .filter_map(|k| def.get(*k).and_then(|v| serde_json::from_value::<Node>(v.clone()).ok()))
+            .collect();
+        super::symbols::deps_key(doc, &art.iter().collect::<Vec<_>>())
+    });
+    format!("brush:{deps}:{text}")
+}
 
-/// A stroke preview for brush definition `def`, rendered at `size` with the resources of `res`
-/// ([`preview_doc`]), and cached by the definition's JSON and the resources' key.
-fn preview(ui: &Ui, res: Resources, def: &Value, size: egui::Vec2) -> Option<egui::TextureHandle> {
-    widgets::doc_preview(ui, &format!("brush:{}:{def}", res.1), size, |w, h| preview_doc(res.0, def, w, h))
+/// A stroke preview for brush definition `def`, rendered at `size` with the resources of `doc`
+/// ([`preview_doc`]) and cached by [`preview_key`].
+fn preview(ui: &Ui, doc: &Document, def: &Value, size: egui::Vec2) -> Option<egui::TextureHandle> {
+    widgets::doc_preview(ui, &preview_key(doc, def), size, |w, h| {
+        #[cfg(test)]
+        tests::BUILDS.with(|b| b.set(b.get() + 1));
+        preview_doc(doc, def, w, h)
+    })
 }
 
 /// What a stroke preview of brush definition `def`, `w` × `h` pt, renders: a copy of `resources`
@@ -70,11 +89,13 @@ fn preview_doc(resources: &Document, def: &Value, w: f64, h: f64) -> Option<Docu
     Some(doc)
 }
 
-/// The stroke preview of brush definition `def` (with the resources of `res`) on white in `r`:
+/// The stroke preview of brush definition `def` (with the resources of `doc`) on white in `r`:
 /// the panels' brushes and the chip a dragged brush shows at the pointer.
-pub(crate) fn chip(ui: &Ui, r: egui::Rect, res: Resources, def: &Value) {
+pub(crate) fn chip(ui: &Ui, r: egui::Rect, doc: &Document, def: &Value) {
     ui.painter().rect_filled(r, 0.0, egui::Color32::WHITE);
-    if let Some(tex) = preview(ui, res, def, r.size()) {
+    if let Some(tex) = preview(ui, doc, def, r.size()) {
+        #[cfg(test)]
+        tests::DRAWN.with(|d| d.set(d.get() + 1));
         ui.painter().image(tex.id(), r, egui::Rect::from_min_max(egui::pos2(0.0, 0.0), egui::pos2(1.0, 1.0)), egui::Color32::WHITE);
     }
 }
@@ -187,7 +208,6 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
         list.iter().filter_map(|(n, _)| app.run("brush.get", json!({"name": n})).ok().map(|v| (n.clone(), v))).collect();
     // Previews show brush art with the document's patterns, symbols and other resources.
     let doc = app.session.active().map(|d| d.doc.clone());
-    let resources = doc.as_deref().map(|d| (d, super::symbols::resources_key(d)));
     let mut clicked: Option<(String, egui::Modifiers)> = None;
     let mut options: Option<String> = None;
     let mut moved: Option<Value> = None;
@@ -221,8 +241,8 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut Ui) {
                 }
                 let pw = if label { 72.0 } else { size.x - 4.0 };
                 let pr = egui::Rect::from_min_size(r.left_top() + vec2(2.0, 2.0), vec2(pw, size.y - 4.0));
-                if let (Some(def), Some(res)) = (defs.get(name), resources) {
-                    chip(ui, pr, res, def);
+                if let (Some(def), Some(doc)) = (defs.get(name), doc.as_deref()) {
+                    chip(ui, pr, doc, def);
                 } else {
                     ui.painter().rect_filled(pr, 0.0, egui::Color32::WHITE);
                 }
@@ -449,8 +469,6 @@ fn library_brush_drop(ui: &Ui, zone: &egui::Response) -> Option<(String, String)
 pub(crate) struct LibBrush {
     lib: Arc<BrushLibrary>,
     index: usize,
-    /// [`super::symbols::resources_key`] of the library's document.
-    resources: u64,
     /// The brush's definition (`brush.get`), which its preview is cached by.
     def: Value,
 }
@@ -482,12 +500,11 @@ impl LibraryKind for BrushLibraries {
     }
     fn get(app: &VectorcraftApp, id: &str) -> Option<(String, Self::Lib)> {
         let (info, lib) = brushlib::library(&app.session, id)?;
-        let resources = super::symbols::resources_key(&lib.doc);
         let shown = lib
             .brushes
             .iter()
             .enumerate()
-            .map(|(index, b)| LibBrush { lib: lib.clone(), index, resources, def: serde_json::to_value(b).unwrap_or_default() })
+            .map(|(index, b)| LibBrush { lib: lib.clone(), index, def: serde_json::to_value(b).unwrap_or_default() })
             .collect();
         Some((info.name, Arc::new(shown)))
     }
@@ -503,7 +520,7 @@ impl LibraryKind for BrushLibraries {
     }
     /// The brush's stroke preview, drawn with the library's resources.
     fn draw(_: &VectorcraftApp, ui: &Ui, r: egui::Rect, b: &LibBrush, selected: bool, hovered: bool) {
-        chip(ui, r, (&b.lib.doc, b.resources), &b.def);
+        chip(ui, r, &b.lib.doc, &b.def);
         super::graphic_styles::outline(ui, r, selected, hovered);
     }
     fn row_icons(_: &Ui, _: egui::Rect, _: &LibBrush) {}
@@ -616,6 +633,20 @@ mod tests {
     use egui::{Pos2, Rect, pos2};
     use vectorcraft_doc::NodeId;
     use vectorcraft_engine::Session;
+
+    thread_local! {
+        /// Stroke previews rendered (cache misses), and drawn, on this test thread.
+        pub(super) static BUILDS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+        pub(super) static DRAWN: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    }
+
+    /// One frame of the panel → (previews rendered, previews drawn) in it.
+    fn counted(ctx: &egui::Context, app: &mut VectorcraftApp) -> (usize, usize) {
+        BUILDS.with(|b| b.set(0));
+        DRAWN.with(|d| d.set(0));
+        frame(ctx, app, vec![]);
+        (BUILDS.with(std::cell::Cell::get), DRAWN.with(std::cell::Cell::get))
+    }
 
     use super::*;
 
@@ -1026,5 +1057,47 @@ mod tests {
         frame(&ctx, &mut app, vec![egui::Event::PointerMoved(at)]);
         frame(&ctx, &mut app, vec![button(at, false)]);
         assert!(vectorcraft_brush::find(&app.session.active().unwrap().doc, "Beads").is_some());
+    }
+
+    /// A preview is cached by its brush and the patterns and symbols its art shows: adding other
+    /// brushes (and the patterns and symbols they bring) renders only the new one, every preview
+    /// is drawn in the first frame, and changing a pattern a brush shows renders that brush again.
+    /// Symbol thumbnails are keyed the same way.
+    #[test]
+    fn previews_render_again_only_when_what_they_show_changes() {
+        let mut app = VectorcraftApp::new(Session::new(), Default::default());
+        app.run("file.new", json!({"width": 200, "height": 200})).unwrap();
+        let ctx = egui::Context::default();
+        let count = |app: &mut VectorcraftApp| brushes(app).0.len();
+        let n = count(&mut app);
+        assert_eq!(counted(&ctx, &mut app), (n, n), "the first frame renders and draws every preview");
+        assert_eq!(counted(&ctx, &mut app), (0, n), "then they are cached");
+        // Striped Ribbon brings its pattern, Sparkles its symbol: only they render.
+        app.run("brush.addFromLibrary", json!({"library": "art-ribbons", "name": "Striped Ribbon"})).unwrap();
+        assert_eq!(counted(&ctx, &mut app), (1, n + 1));
+        let sparkle_before = super::super::symbols::symbol_key(&app.session.doc().unwrap().doc, "Sparkle");
+        app.run("brush.addFromLibrary", json!({"library": "scatter-shapes", "name": "Sparkles"})).unwrap();
+        assert_eq!(counted(&ctx, &mut app), (1, n + 2));
+        // A symbol added beside Sparkle leaves its thumbnail key alone.
+        let doc = |app: &VectorcraftApp| app.session.doc().unwrap().doc.clone();
+        let sparkle = super::super::symbols::symbol_key(&doc(&app), "Sparkle");
+        assert_ne!(sparkle, sparkle_before, "0 before Sparkle came in");
+        app.run("symbol.addFromLibrary", json!({"library": "basic-shapes", "name": "Star"})).unwrap();
+        assert_eq!(super::super::symbols::symbol_key(&doc(&app), "Sparkle"), sparkle);
+        assert_eq!(counted(&ctx, &mut app), (0, n + 2));
+        // A new Pinstripes tile: Striped Ribbon renders again, the others don't.
+        app.session
+            .edit("Pattern", |d, _| {
+                let p = d.patterns.iter_mut().find(|p| p.name == "Pinstripes").unwrap();
+                let dot = Node::path(
+                    NodeId(0),
+                    vectorcraft_geom::shapes::ellipse(vectorcraft_geom::Rect::new(0.0, 0.0, 3.0, 3.0)),
+                    Appearance::default_art(),
+                );
+                p.art = vec![std::sync::Arc::new(dot)];
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(counted(&ctx, &mut app), (1, n + 2));
     }
 }
