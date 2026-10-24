@@ -616,7 +616,17 @@ pub(crate) fn drag_preview(app: &VectorcraftApp, ctx: &egui::Context) {
             Some((_, lib)) => return pointer_chip(ctx, |ui, r| super::symbols::chip(ui, &lib.doc, super::symbols::resources_key(&lib.doc), r, name)),
             None => return,
         },
-        PanelDrag::Brush { def, .. } => return pointer_chip(ctx, |ui, r| super::brushes::chip(ui, r, def)),
+        PanelDrag::Brush { def, .. } => match app.session.active() {
+            Some(st) => return pointer_chip(ctx, |ui, r| super::brushes::chip(ui, r, (&st.doc, super::symbols::resources_key(&st.doc)), def)),
+            None => return,
+        },
+        PanelDrag::LibraryBrush { library, name } => match vectorcraft_engine::cmd::brushlib::library(&app.session, library) {
+            Some((_, lib)) => {
+                let def = lib.brush(name).and_then(|b| serde_json::to_value(b).ok()).unwrap_or_default();
+                return pointer_chip(ctx, |ui, r| super::brushes::chip(ui, r, (&lib.doc, super::symbols::resources_key(&lib.doc)), &def));
+            }
+            None => return,
+        },
         PanelDrag::LibraryGraphic { library, item } => return pointer_chip(ctx, |ui, r| super::libraries::chip(app, ui, r, library, item)),
         PanelDrag::LibraryItem { .. } | PanelDrag::LibraryGroup { .. } => return,
     };
