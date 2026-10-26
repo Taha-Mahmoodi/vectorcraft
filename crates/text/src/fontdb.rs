@@ -80,6 +80,21 @@ type InstanceKey = (u32, Vec<([u8; 4], u32)>);
 /// How many instanced faces [`Instances::live`] holds at most.
 pub(crate) const MAX_LIVE_INSTANCES: usize = 256;
 
+/// The fonts files carried that the database keeps ([`FontDb::keep_file_font`]), by their blob's key
+/// and by face id.
+#[derive(Default)]
+struct FileFaces {
+    by_key: HashMap<String, Arc<FontFace>>,
+    by_id: HashMap<u32, Arc<FontFace>>,
+}
+
+/// How many fonts files carried the database keeps at most (each shares its document's bytes).
+pub const MAX_FILE_FACES: usize = 4096;
+
+/// What layout names the family of a run drawn in a font a file carried, followed by the face's
+/// id ([`FontDb::style_face`] finds it so): no font's family name starts so.
+pub(crate) const FILE_FONT_FAMILY: &str = "\u{1}file font ";
+
 #[derive(Clone)]
 enum FontBytes {
     Static(&'static [u8]),
@@ -522,6 +537,9 @@ pub struct FontDb {
     stamp: Mutex<Option<ScanStamp>>,
     /// Faces instanced at the axis settings of type's Variable Font sliders ([`FontDb::instance`]).
     instances: Mutex<Instances>,
+    /// Fonts files carried for their type ([`vectorcraft_doc::FileFonts`]): apart from the faces,
+    /// so no family name, font menu, fallback or PostScript name lookup finds them.
+    file_faces: RwLock<FileFaces>,
 }
 
 /// Where a database's system font scan looks: folders (read with their subfolders) and font files.
@@ -1815,6 +1833,7 @@ impl FontDb {
             #[cfg(not(target_arch = "wasm32"))]
             stamp: Mutex::new(None),
             instances: Mutex::new(Instances::default()),
+            file_faces: RwLock::new(FileFaces::default()),
         }
     }
 
@@ -2359,17 +2378,107 @@ impl FontDb {
     }
 
     /// The loaded face with [`FontFace::id`] `id` (the face a laid-out glyph came from), an
-    /// instanced face ([`Self::instance`]) included.
+    /// instanced face ([`Self::instance`]) and a font a file carried ([`Self::keep_file_font`])
+    /// included.
     pub fn face_by_id(&self, id: u32) -> Option<Arc<FontFace>> {
         let loaded = self.read_faces().iter().find(|f| f.id == id).cloned();
-        loaded.or_else(|| self.instance_by_id(id))
+        loaded.or_else(|| self.instance_by_id(id)).or_else(|| self.read_file_faces().by_id.get(&id).cloned())
     }
 
     /// The face of character style `st`: [`Self::face_version`] of its font, instanced at its
-    /// Variable Font settings ([`Self::instance`]).
+    /// Variable Font settings ([`Self::instance`]); for the styles layout gives the runs a font a
+    /// file carried draws ([`Self::file_faces`]), that font.
     pub fn style_face(&self, st: &vectorcraft_doc::CharStyle) -> Option<Arc<FontFace>> {
+        if let Some(id) = st.font_family.strip_prefix(FILE_FONT_FAMILY).and_then(|id| id.parse::<u32>().ok())
+            && let Some(face) = self.read_file_faces().by_id.get(&id)
+        {
+            return Some(face.clone());
+        }
         let face = self.face_version(&st.font_family, &st.font_style, st.font_version.as_deref())?;
         Some(self.instance(&face, &st.font_axes))
+    }
+
+    /// Keep the font a file carried that a document holds as blob `key` ([`vectorcraft_doc::FileFonts`]),
+    /// for its type to be drawn in: read once per key (the face shares the blob's bytes). `false`
+    /// when it can't be read (its type takes the font it names, or the substitute), or when
+    /// [`MAX_FILE_FACES`] are kept already.
+    pub fn keep_file_font(&self, key: &str, bytes: Arc<Vec<u8>>) -> bool {
+        if self.read_file_faces().by_key.contains_key(key) {
+            return true;
+        }
+        let Some((i, spec)) = enumerate_faces(&bytes).into_iter().next() else { return false };
+        let Some(face) = make_face(FontBytes::Owned(bytes), i, spec, None) else { return false };
+        let mut faces = self.file_faces.write().unwrap_or_else(|e| e.into_inner());
+        if faces.by_key.contains_key(key) {
+            return true;
+        }
+        if faces.by_key.len() >= MAX_FILE_FACES {
+            return false;
+        }
+        let face = Arc::new(face);
+        faces.by_id.insert(face.id, face.clone());
+        faces.by_key.insert(key.to_string(), face);
+        true
+    }
+
+    /// [`Self::keep_file_font`] for every font a file carried among a document's image blobs
+    /// `images` (those of MIME [`vectorcraft_doc::FILE_FONT_MIME`]).
+    pub fn keep_file_fonts<'a>(&self, images: impl IntoIterator<Item = (&'a String, &'a vectorcraft_doc::ImageBlob)>) {
+        for (key, blob) in images {
+            if blob.mime == vectorcraft_doc::FILE_FONT_MIME {
+                // One that can't be read leaves its type in the font it names (or the substitute).
+                let _ = self.keep_file_font(key, blob.bytes.clone());
+            }
+        }
+    }
+
+    /// The face of the font a file carried kept as blob `key` ([`Self::keep_file_font`]).
+    pub fn file_font(&self, key: &str) -> Option<Arc<FontFace>> {
+        self.read_file_faces().by_key.get(key).cloned()
+    }
+
+    /// Is face `id` a font a file carried ([`Self::keep_file_font`])?
+    pub fn is_file_font(&self, id: u32) -> bool {
+        self.read_file_faces().by_id.contains_key(&id)
+    }
+
+    fn read_file_faces(&self) -> std::sync::RwLockReadGuard<'_, FileFaces> {
+        self.file_faces.read().unwrap_or_else(|e| e.into_inner())
+    }
+
+    /// For each run of `t`, the font a file carried that draws it ([`vectorcraft_doc::FileFonts`]):
+    /// while its text is the file's, the font the run names isn't available as named (missing, or
+    /// another style of its family stands in) and the font kept for that family and style is
+    /// loaded ([`Self::keep_file_font`]). `None` for the runs drawn in the font they name or its
+    /// substitute; empty when none is drawn in such a font.
+    pub fn file_faces(&self, t: &vectorcraft_doc::TextObject) -> Vec<Option<Arc<FontFace>>> {
+        if t.file_fonts.is_none() {
+            return vec![];
+        }
+        let fonts = t.file_fonts_in_use();
+        if fonts.is_empty() {
+            return vec![];
+        }
+        // Each family and style's answer once: a line has a run per character it spaces apart.
+        let mut known: Vec<(&str, &str, Option<Arc<FontFace>>)> = vec![];
+        let mut out = Vec::with_capacity(t.runs.len());
+        for r in &t.runs {
+            let (family, style) = (r.style.font_family.as_str(), r.style.font_style.as_str());
+            let face = match known.iter().find(|(f, s, _)| *f == family && *s == style) {
+                Some((.., face)) => face.clone(),
+                None => {
+                    let face = fonts
+                        .iter()
+                        .find(|f| f.family == family && f.style == style)
+                        .filter(|_| self.resolve(family, style).is_none_or(|(_, m)| m != FontMatch::Exact))
+                        .and_then(|f| self.file_font(&f.key));
+                    known.push((family, style, face.clone()));
+                    face
+                }
+            };
+            out.push(face);
+        }
+        if out.iter().all(Option::is_none) { vec![] } else { out }
     }
 
     /// `face` with the axis settings `axes` (by tag, in the axes' own units) in place of its own,

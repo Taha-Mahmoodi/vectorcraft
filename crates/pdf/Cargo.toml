@@ -37,6 +37,8 @@ sha2 = { version = "0.10", default-features = false }
 
 [dev-dependencies]
 vectorcraft-testkit = { workspace = true }
+# Native files written and read back (type in the fonts a PDF carries keeps them).
+vectorcraft-format = { workspace = true }
 # A variable font built in code (no font file is committed).
 vectorcraft-text = { workspace = true, features = ["test-fonts"] }
 serde_json = { workspace = true }

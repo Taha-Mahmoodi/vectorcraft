@@ -50,6 +50,7 @@ mod forms;
 mod images;
 mod import;
 mod import_color;
+mod import_fonts;
 mod import_image;
 mod import_lines;
 mod import_mask;
@@ -262,6 +263,8 @@ mod tests_dashalign;
 mod tests_editing;
 #[cfg(test)]
 mod tests_encrypt;
+#[cfg(test)]
+mod tests_file_fonts;
 #[cfg(test)]
 mod tests_file_info;
 #[cfg(test)]

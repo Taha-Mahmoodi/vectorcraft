@@ -1624,6 +1624,59 @@ impl RubySpan {
     }
 }
 
+/// The MIME type of a font a file carried ([`FileFonts`]), kept among the document's image blobs
+/// ([`crate::Document::images`]).
+pub const FILE_FONT_MIME: &str = "font/ttf";
+
+/// The most fonts of [`FileFonts`] that draw one type object (a file's list may be longer: the rest
+/// are left out).
+pub const MAX_FILE_FONTS: usize = 64;
+
+/// The fonts a file carried for type whose fonts aren't available here (a PDF's embedded fonts),
+/// kept with the document among its image blobs ([`crate::Document::images`], MIME
+/// [`FILE_FONT_MIME`]). A file embeds its fonts so that readers see its text in its own fonts
+/// rather than substitutes (Acrobat Help, PDF fonts,
+/// <https://helpx.adobe.com/acrobat/using/pdf-fonts.html>); editing text in a font that isn't
+/// installed sets it in a substitute (Acrobat Help, Edit text in PDFs,
+/// <https://helpx.adobe.com/acrobat/using/edit-text-pdfs1.html>). So the type is drawn in these,
+/// as the file drew it, while its text is the one the file had and a font it names isn't
+/// available: once its text is edited (or that font is installed) it takes the font it names, or
+/// its substitute. Its runs keep naming the file's fonts, so they stay listed as missing.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct FileFonts {
+    /// The font kept for each family and style the runs name.
+    pub fonts: Vec<FileFont>,
+    /// The text as the file had it ([`text_hash`] of the plain text).
+    pub text: u64,
+}
+
+impl FileFonts {
+    /// `fonts` for type whose text is `text`.
+    pub fn new(fonts: Vec<FileFont>, text: &str) -> Self {
+        Self { fonts, text: text_hash([text]) }
+    }
+}
+
+/// One font of [`FileFonts`]: the family and style type names it by, and its blob.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FileFont {
+    pub family: String,
+    pub style: String,
+    /// The font's blob among the document's image blobs.
+    pub key: String,
+}
+
+/// A hash of the text `parts` make one after another (64-bit FNV-1a of its UTF-8 bytes): the same
+/// on every machine and in every version, as a saved [`FileFonts::text`] needs.
+pub fn text_hash<'a>(parts: impl IntoIterator<Item = &'a str>) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in parts.into_iter().flat_map(str::bytes) {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0100_0000_01b3);
+    }
+    h
+}
+
 /// A text object. `runs` split into paragraphs at `\n`.
 ///
 /// Paragraph attributes: `para` is paragraph 0's (and, while `paras` is empty, every
@@ -1695,6 +1748,10 @@ pub struct TextObject {
     /// file saves the count only when it is not 0.
     #[serde(default, rename = "listCount", skip_serializing_if = "crate::skip::is_default")]
     pub list_count: u32,
+    /// The fonts the file this type came from carried for fonts that aren't available here,
+    /// which draw it until its text is edited ([`FileFonts`]); `None` for other type.
+    #[serde(default, rename = "fileFonts", skip_serializing_if = "Option::is_none")]
+    pub file_fonts: Option<Box<FileFonts>>,
     /// Cached layout bounds in text space, filled in by the layout engine (not serialized).
     #[serde(skip)]
     pub cached_bounds: Option<Rect>,
@@ -1796,12 +1853,23 @@ impl TextObject {
             system_layout: false,
             fractional_widths: true,
             list_count: 0,
+            file_fonts: None,
             cached_bounds: None,
             cached_baselines: Vec::new(),
         }
     }
     pub fn plain_text(&self) -> String {
         self.runs.iter().map(|r| r.text.as_str()).collect()
+    }
+    /// The fonts the file this type came from carried ([`FileFonts`]) while its text is still the
+    /// file's (at most [`MAX_FILE_FONTS`]); none once it was edited, and for other type.
+    pub fn file_fonts_in_use(&self) -> &[FileFont] {
+        match self.file_fonts.as_deref() {
+            Some(f) if f.text == text_hash(self.runs.iter().map(|r| r.text.as_str())) => {
+                f.fonts.get(..f.fonts.len().min(MAX_FILE_FONTS)).unwrap_or_default()
+            }
+            _ => &[],
+        }
     }
     /// Clamp the ruby spans to the plain text, drop empty/empty-reading ones and sort them.
     ///
@@ -2536,5 +2604,30 @@ mod tests {
         assert_eq!(serde_json::from_str::<ParaStyle>(&json).unwrap(), p);
         // Files from before the flag keep their alignment.
         assert_eq!(serde_json::from_str::<ParaStyle>(r#"{"justify":"Center"}"#).unwrap().justify, Justify::Center);
+    }
+
+    #[test]
+    fn file_fonts_draw_type_only_while_its_text_is_the_files() {
+        // The hash is the same everywhere and in every version (saved files carry it).
+        assert_eq!(text_hash([""]), 0xcbf2_9ce4_8422_2325);
+        assert_eq!(text_hash(["Ham", "burg"]), text_hash(["Hamburg"]));
+        assert_ne!(text_hash(["Hamburg"]), text_hash(["Hamburh"]));
+        let font = FileFont { family: "Source Serif 9".into(), style: "Regular".into(), key: "k".into() };
+        let mut t = TextObject::point(Point::ZERO, "Ham", CharStyle::default());
+        t.runs.push(TextRun::new("burg", CharStyle::default()));
+        assert!(t.file_fonts_in_use().is_empty());
+        t.file_fonts = Some(Box::new(FileFonts::new(vec![font.clone()], "Hamburg")));
+        assert_eq!(t.file_fonts_in_use(), std::slice::from_ref(&font));
+        // Saved and read back.
+        let json = serde_json::to_string(&t).unwrap();
+        assert!(json.contains(r#""fileFonts":{"fonts":[{"family":"Source Serif 9","style":"Regular","key":"k"}]"#), "{json}");
+        assert_eq!(serde_json::from_str::<TextObject>(&json).unwrap(), t);
+        // Edited: none.
+        t.runs[1].text.push('s');
+        assert!(t.file_fonts_in_use().is_empty());
+        // A file's list past the cap: the first ones.
+        t.runs[1].text.pop();
+        t.file_fonts.as_mut().unwrap().fonts = vec![font; MAX_FILE_FONTS + 5];
+        assert_eq!(t.file_fonts_in_use().len(), MAX_FILE_FONTS);
     }
 }
