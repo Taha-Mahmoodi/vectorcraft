@@ -6346,7 +6346,6 @@ dependencies = [
  "vectorcraft-color",
  "vectorcraft-doc",
  "vectorcraft-effects",
- "vectorcraft-format",
  "vectorcraft-geom",
  "vectorcraft-testkit",
  "vectorcraft-text",

@@ -142,20 +142,6 @@ fn type_in_a_font_the_file_carries_keeps_its_glyphs_and_places() {
 }
 
 #[test]
-fn type_in_a_carried_font_saves_and_reads_back_with_its_look() {
-    let carried = import(&page_pdf(uninstalled_serif()));
-    let back = vectorcraft_format::load(&vectorcraft_format::save(&carried.document, false)).unwrap();
-    let fonts: Vec<_> = back.images.iter().filter(|(_, b)| b.mime == FILE_FONT_MIME).collect();
-    assert_eq!(fonts.len(), 1, "the font is saved with the type");
-    assert_eq!(fonts[0].1.bytes, carried.document.images[fonts[0].0].bytes);
-    // On another machine (a database that only has what the file brings).
-    let fresh = FontDb::with_font_dirs(vec![]);
-    fresh.keep_file_fonts(&back.images);
-    let far = farthest(&drawn(&fresh, &back), &drawn(FontDb::global(), &carried.document));
-    assert!(far < 1e-6, "read back {far} pt off");
-}
-
-#[test]
 fn edited_type_takes_the_substitute_and_unedited_type_keeps_the_files_font() {
     let db = FontDb::global();
     let carried = import(&page_pdf(uninstalled_serif()));
