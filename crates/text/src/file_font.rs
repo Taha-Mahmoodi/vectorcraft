@@ -182,7 +182,7 @@ pub fn build_file_font(info: &FileFontInfo, glyphs: &[FileGlyph]) -> Option<Vec<
         s_typo_descender: descent,
         s_typo_line_gap: 0,
         us_win_ascent: u16::try_from(ascent.max(bounds.y_max)).unwrap_or(0),
-        us_win_descent: u16::try_from(-descent.min(bounds.y_min)).unwrap_or(0),
+        us_win_descent: u16::try_from(-i32::from(descent.min(bounds.y_min))).unwrap_or(0),
         ul_code_page_range_1: Some(0),
         ul_code_page_range_2: Some(0),
         sx_height: Some(0),
@@ -409,5 +409,13 @@ mod tests {
         // Bytes that aren't a font are kept by no one.
         assert!(!db.keep_file_font("junk", Arc::new(b"not a font".to_vec())));
         assert!(db.file_font("junk").is_none());
+    }
+
+    #[test]
+    fn extreme_negative_descent_does_not_overflow() {
+        let mut i = info();
+        i.descent = -100_000.0;
+        let bytes = build_file_font(&i, &glyphs("a"));
+        assert!(bytes.is_some());
     }
 }
