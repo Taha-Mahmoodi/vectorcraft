@@ -14,6 +14,12 @@ use vectorcraft_geom::{Anchor, FillRule, PathData, SubPath};
 use crate::PathOpsError;
 use crate::fit::{end_tangent, fit_single, is_straight, sample, start_tangent};
 
+#[cfg(test)]
+thread_local! {
+    /// The contour passes made over an arrangement on this thread, each of which walks all of it.
+    pub(crate) static CONTOUR_PASSES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
 /// Default curve-refit tolerance (document points) used to merge split curve pieces back together.
 /// Similar in spirit to Illustrator's Pathfinder "Precision" option (0.028 pt).
 pub const DEFAULT_PRECISION: f64 = 0.01;
@@ -314,11 +320,13 @@ impl Arrangement {
 
     /// [`Arrangement::contours`] with the test on the windings themselves (see [`Self::covered`]).
     pub(crate) fn contours_where(&self, pred: impl Fn(&Multi) -> bool) -> Contours {
+        #[cfg(test)]
+        CONTOUR_PASSES.with(|n| n.set(n.get() + 1));
         self.top.contours(pred)
     }
 
     pub(crate) fn contours(&self, pred: impl Fn(&[bool]) -> bool) -> Contours {
-        self.top.contours(|w| pred(&self.mask(w)))
+        self.contours_where(|w| pred(&self.mask(w)))
     }
 
     /// All distinct non-empty coverage masks that occur next to some edge, sorted.
@@ -687,6 +695,11 @@ pub fn boolean_n(paths: &[(&PathData, FillRule)], pred: impl Fn(&[bool]) -> bool
 /// [`unite_all`] that reports a refused input instead of leaving it out of the union or returning
 /// an empty path.
 pub fn try_unite_all(paths: &[(&PathData, FillRule)]) -> Result<PathData, PathOpsError> {
+    try_unite_all_with(paths, DEFAULT_PRECISION)
+}
+
+/// [`try_unite_all`] refit to `precision`, dropping slivers thinner than it.
+pub fn try_unite_all_with(paths: &[(&PathData, FillRule)], precision: f64) -> Result<PathData, PathOpsError> {
     let mut all = BezPath::new();
     for (p, r) in paths {
         let bp = fill_bezpath(p);
@@ -700,13 +713,18 @@ pub fn try_unite_all(paths: &[(&PathData, FillRule)]) -> Result<PathData, PathOp
     if all.elements().is_empty() {
         return Ok(PathData::default());
     }
-    let tidy = Tidy::keeping(DEFAULT_PRECISION, paths.iter().map(|(p, _)| fill_bezpath(p)).collect::<Vec<_>>().iter());
+    let tidy = Tidy::keeping(precision, paths.iter().map(|(p, _)| fill_bezpath(p)).collect::<Vec<_>>().iter());
     Ok(all_contours_to_path(&normalize_bez(&all, FillRule::NonZero)?, &tidy))
 }
 
 /// Union of many filled paths. Each input is first normalised on its own, then all are swept
 /// together with a single integer winding number, which keeps this fast for thousands of shapes.
 pub fn unite_all(paths: &[(&PathData, FillRule)]) -> PathData {
+    unite_all_with(paths, DEFAULT_PRECISION)
+}
+
+/// [`unite_all`] refit to `precision`, dropping slivers thinner than it.
+pub fn unite_all_with(paths: &[(&PathData, FillRule)], precision: f64) -> PathData {
     let mut all = BezPath::new();
     for (p, r) in paths {
         let bp = fill_bezpath(p);
@@ -721,7 +739,7 @@ pub fn unite_all(paths: &[(&PathData, FillRule)]) -> PathData {
     if all.elements().is_empty() {
         return PathData::default();
     }
-    let tidy = Tidy::keeping(DEFAULT_PRECISION, paths.iter().map(|(p, _)| fill_bezpath(p)).collect::<Vec<_>>().iter());
+    let tidy = Tidy::keeping(precision, paths.iter().map(|(p, _)| fill_bezpath(p)).collect::<Vec<_>>().iter());
     match normalize_bez(&all, FillRule::NonZero) {
         Ok(c) => all_contours_to_path(&c, &tidy),
         Err(_) => PathData::default(),

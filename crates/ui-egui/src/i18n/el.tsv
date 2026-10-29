@@ -320,7 +320,6 @@ font-technology	Variable	Μεταβλητές
 	Brush Affects:	Το πινέλο επηρεάζει:
 	Brush Definition	Ορισμός πινέλου
 	Brush Libraries	Βιβλιοθήκες πινέλων
-	Brush Libraries (on the roadmap)	Βιβλιοθήκες πινέλων (στον σχεδιασμό)
 	Brush Options…	Επιλογές πινέλου…
 	Brush Strokes	Πινελιές
 	Brushes	Πινέλα
@@ -332,6 +331,7 @@ font-technology	Variable	Μεταβλητές
 	Apply Bullets	Εφαρμογή κουκκίδων
 	Numbered List	Αριθμημένη λίστα
 	Apply Numbers	Εφαρμογή αρίθμησης
+	Convert to Text	Μετατροπή σε κείμενο
 	Filled Dot	Γεμάτη κουκκίδα
 	Dash	Παύλα
 	Hollow Circle	Κενός κύκλος
@@ -1866,6 +1866,7 @@ font-technology	Variable	Μεταβλητές
 	Simplify	Απλοποίηση
 	Simplify:	Απλοποίηση:
 	Simplify…	Απλοποίηση…
+	Smooth…	Εξομάλυνση…
 	Size	Μέγεθος
 	Size:	Μέγεθος:
 	Skew	Λοξότητα
@@ -2172,6 +2173,7 @@ axis	Both	Και τα δύο
 @msg	`{key}` must be between {min} and {max} (got {x})	Το `{key}` πρέπει να είναι μεταξύ {min} και {max} (δόθηκε {x})
 @msg	`{key}` must be one of {_1}	Το `{key}` πρέπει να είναι ένα από τα {_1}
 @msg	`{key}` must be true or false	Το `{key}` πρέπει να είναι true ή false
+@msg	`top` and `below` can't both be true	Τα `top` και `below` δεν μπορούν να είναι και τα δύο true
 @msg	`select` must be true or false	Το `select` πρέπει να είναι true ή false
 @msg	`minAnchors` and `maxAnchors` must be whole numbers	Τα `minAnchors` και `maxAnchors` πρέπει να είναι ακέραιοι αριθμοί
 @msg	`{key}` must be a number not below 0	Το `{key}` πρέπει να είναι αριθμός όχι μικρότερος από 0
@@ -2616,6 +2618,7 @@ theme	Appearance	Εμφάνιση
 	Miter Limit:	Όριο οξείας σύνδεσης:
 	Mixed Appearances	Μεικτές εμφανίσεις
 	Mixed Objects	Μεικτά αντικείμενα
+	Mixed	Μικτό
 	Modified	Τροποποιήθηκε
 	Modified since it was read: {path}	Τροποποιήθηκε μετά την ανάγνωση: {path}
 	Modified:	Τροποποιήθηκε:
@@ -2685,6 +2688,10 @@ theme	Appearance	Εμφάνιση
 	Outer Corner Tile	Πλακίδιο εξωτερικής γωνίας
 	Side Tile	Πλευρικό πλακίδιο
 	Inner Corner Tile	Πλακίδιο εσωτερικής γωνίας
+	Auto-Centered	Αυτόματο κεντραρισμένο
+	Auto-Between	Αυτόματο ενδιάμεσο
+	Auto-Sliced	Αυτόματο κομμένο
+	Auto-Overlap	Αυτόματη επικάλυψη
 	Start Tile	Αρχικό πλακίδιο
 	End Tile	Τελικό πλακίδιο
 	Stretch to fit	Επέκταση για προσαρμογή
@@ -3145,6 +3152,7 @@ theme	Appearance	Εμφάνιση
 	Remove Plug-in	Αφαίρεση προσθέτου
 	Remove Selected Assets	Αφαίρεση επιλεγμένων στοιχείων
 	Remove Threading	Αφαίρεση σύνδεσης κειμένου
+	Break Thread	Διακοπή σύνδεσης κειμένου
 	Remove “{keyword}”	Αφαίρεση «{keyword}»
 	Rename Asset	Μετονομασία στοιχείου
 	Rename Character Style	Μετονομασία στυλ χαρακτήρων
@@ -3417,6 +3425,7 @@ theme	Appearance	Εμφάνιση
 	Show Original Path	Εμφάνιση αρχικής διαδρομής
 	Open this dialog with these settings next time	Άνοιγμα αυτού του παραθύρου με αυτές τις ρυθμίσεις την επόμενη φορά
 	Auto-Simplify	Αυτόματη απλοποίηση
+	Auto-Smooth	Αυτόματη εξομάλυνση
 	Show Package	Εμφάνιση συσκευασίας
 	Show Panel	Εμφάνιση πίνακα
 	Show Pattern Swatches	Εμφάνιση δειγμάτων μοτίβου
@@ -3456,7 +3465,7 @@ theme	Appearance	Εμφάνιση
 	Size Tile to Art	Προσαρμογή μεγέθους πλακιδίου στο σχέδιο
 	Size/Leading	Μέγεθος/διάστιχο
 	Ridges per segment:	Ράχες ανά τμήμα:
-	Size: {size}  Tracking: {tracking}	Μέγεθος: {size}  Αραίωση: {tracking}
+	Size: {size}  Tracking: {tracking}	Μέγεθος: {size}  Απόσταση χαρακτήρων: {tracking}
 	Skin Tone Ramps	Χρωματικές κλίμακες τόνων δέρματος
 	Skip Blank Artboards	Παράλειψη κενών πινάκων σχεδίασης
 	Sky Gradients	Ντεγκραντέ ουρανού
@@ -3567,6 +3576,7 @@ theme	Appearance	Εμφάνιση
 	Swatch Options	Επιλογές δείγματος χρώματος
 	Swatch Options…	Επιλογές δείγματος χρώματος…
 	Swatch Tiles	Πλακίδια δειγμάτων χρωμάτων
+	Switch Units	Αλλαγή μονάδων
 	Switch workspace	Αλλαγή χώρου εργασίας
 	Add Content	Προσθήκη περιεχομένου
 	Click to apply to the selected type	Κλικ για εφαρμογή στο επιλεγμένο κείμενο
@@ -3740,6 +3750,7 @@ theme	Appearance	Εμφάνιση
 	Unlock Guides	Ξεκλείδωμα οδηγών
 	Unnamed Objects	Αντικείμενα χωρίς όνομα
 	Unprintable margin:	Μη εκτυπώσιμο περιθώριο:
+	Unselected Artwork	Μη επιλεγμένα γραφικά στοιχεία
 	Unshift	Αναίρεση μετατόπισης
 	Update Link	Ενημέρωση συνδέσμου
 	Update Links	Ενημέρωση συνδέσμων
@@ -4032,6 +4043,7 @@ theme	Appearance	Εμφάνιση
 @msg	missing `id` (see plugin.list)	λείπει το `id` (δείτε plugin.list)
 @msg	missing `name`	λείπει το `name`
 @msg	missing `tool`	λείπει το `tool`
+@msg	missing id	λείπει το id
 @msg	missing index	λείπει ο δείκτης
 @msg	missing number `{key}`	λείπει ο αριθμός `{key}`
 @msg	missing integer `{key}`	λείπει ο ακέραιος `{key}`
@@ -4064,6 +4076,7 @@ theme	Appearance	Εμφάνιση
 @msg	no current layer	δεν υπάρχει τρέχον επίπεδο
 @msg	no data	δεν υπάρχουν δεδομένα
 @msg	no dialog open	δεν υπάρχει ανοιχτό παράθυρο διαλόγου
+@msg	the open dialog has no Reset	το ανοιχτό παράθυρο διαλόγου δεν έχει κουμπί Επαναφορά
 @msg	no document	δεν υπάρχει έγγραφο
 @msg	no document open	δεν υπάρχει ανοιχτό έγγραφο
 @msg	no effect applied yet	δεν έχει εφαρμοστεί ακόμη εφέ
@@ -4146,6 +4159,7 @@ theme	Appearance	Εμφάνιση
 @msg	not in pattern editing mode	δεν βρίσκεστε σε λειτουργία επεξεργασίας μοτίβου
 @msg	nothing encoded	δεν κωδικοποιήθηκε τίποτα
 @msg	nothing selected	δεν έχει επιλεγεί τίποτα
+@msg	nothing selected is in a group	τίποτα από τα επιλεγμένα δεν βρίσκεται σε ομάδα
 @msg	nothing to align	δεν υπάρχει τίποτα για στοίχιση
 @msg	nothing to distort	δεν υπάρχει τίποτα για παραμόρφωση
 @msg	nothing to export: the document has no visible art (or turn on Use Artboards)	δεν υπάρχει τίποτα για εξαγωγή: το έγγραφο δεν έχει ορατό σχέδιο (ή ενεργοποιήστε Χρήση πινάκων σχεδίασης)
@@ -4213,6 +4227,7 @@ theme	Appearance	Εμφάνιση
 @msg	select an object in perspective	επιλέξτε αντικείμενο σε προοπτική
 @msg	select artwork (or a colour group) to recolor	επιλέξτε σχέδιο (ή ομάδα χρωμάτων) για επαναχρωματισμό
 @msg	select at least two objects	επιλέξτε τουλάχιστον δύο αντικείμενα
+@msg	exit isolation mode first	βγείτε πρώτα από τη λειτουργία απομόνωσης
 @msg	select objects, not layers	επιλέξτε αντικείμενα, όχι επίπεδα
 @msg	select one path, or give its `id`	επιλέξτε μία διαδρομή ή δώστε το `id` της
 @msg	select paths to join	επιλέξτε διαδρομές για ένωση
@@ -4265,10 +4280,14 @@ theme	Appearance	Εμφάνιση
 @msg	the layer or group is locked	το επίπεδο ή η ομάδα είναι κλειδωμένα
 @msg	the guide is on a hidden or locked layer	ο οδηγός βρίσκεται σε κρυφό ή κλειδωμένο επίπεδο
 @msg	the target layer is locked or hidden	το επίπεδο προορισμού είναι κλειδωμένο ή κρυφό
+@msg	the object is hidden or locked	το αντικείμενο είναι κρυφό ή κλειδωμένο
+@msg	the object is outside the isolated group	το αντικείμενο βρίσκεται εκτός της απομονωμένης ομάδας
+@msg	type objects can't be isolated	τα αντικείμενα κειμένου δεν μπορούν να απομονωθούν
 @msg	the layer to flatten into is hidden	το επίπεδο προορισμού ισοπέδωσης είναι κρυφό
 @msg	the object already has an opacity mask	το αντικείμενο έχει ήδη μάσκα αδιαφάνειας
 @msg	the object has no geometry	το αντικείμενο δεν έχει γεωμετρία
 @msg	the object has no opacity mask	το αντικείμενο δεν έχει μάσκα αδιαφάνειας
+@msg	stop editing the opacity mask first	τερματίστε πρώτα την επεξεργασία της μάσκας αδιαφάνειας
 @msg	the object has no stroke	το αντικείμενο δεν έχει περίγραμμα
 @msg	the object is beyond the plane's horizon	το αντικείμενο βρίσκεται πέρα από τον ορίζοντα του επιπέδου
 @msg	the object isn't in perspective	το αντικείμενο δεν βρίσκεται σε προοπτική
@@ -4338,6 +4357,7 @@ theme	Appearance	Εμφάνιση
 @msg	{_1} is already used by {_2}	το {_1} χρησιμοποιείται ήδη από το {_2}
 @msg	{_1} is reserved by the system	Το {_1} είναι δεσμευμένο από το σύστημα
 @msg	{_1} linked file(s) can't be read here: their previews show	{_1} συνδεδεμένα αρχεία δεν μπορούν να διαβαστούν εδώ: εμφανίζονται οι προεπισκοπήσεις τους
+@msg	{undecoded} image(s) couldn't be decoded and show as crossed boxes	{undecoded} εικόνες δεν ήταν δυνατό να αποκωδικοποιηθούν: εμφανίζονται ως πλαίσια με σταυρό
 @msg	{_1} linked image(s) changed on disk: Update Links shows the new versions	{_1} συνδεδεμένες εικόνες άλλαξαν στον δίσκο: η Ενημέρωση συνδέσμων εμφανίζει τις νέες εκδόσεις
 @msg	Updated {_1} linked file(s) changed on disk	Ενημερώθηκαν {_1} συνδεδεμένα αρχεία που άλλαξαν στον δίσκο
 @msg	{_1}: not saved, so not closed	{_1}: δεν αποθηκεύτηκε και επομένως δεν έκλεισε
@@ -4452,6 +4472,10 @@ theme	Appearance	Εμφάνιση
 	Shaper	Διαμορφωτής σχημάτων (Shaper Tool)
 	Expand Shaper Group	Ανάπτυξη ομάδας διαμόρφωσης σχημάτων
 	Release Shaper Group	Αποδέσμευση ομάδας διαμόρφωσης σχημάτων
+	Remove from Shaper Group	Αφαίρεση από ομάδα διαμόρφωσης σχημάτων
+@msg	source must be the id of a Shaper Group's original shape	Το source πρέπει να είναι το αναγνωριστικό ενός αρχικού σχήματος ομάδας διαμόρφωσης σχημάτων
+@msg	group must be the id of a Shaper Group	Το group πρέπει να είναι το αναγνωριστικό μιας ομάδας διαμόρφωσης σχημάτων
+@msg	the shape is not an editable original shape of that Shaper Group	Το σχήμα δεν είναι επεξεργάσιμο αρχικό σχήμα αυτής της ομάδας διαμόρφωσης σχημάτων
 	Select Shaper Face	Επιλογή επιφάνειας διαμορφωτή
 	Drag art, colors and text styles here to reuse them across documents. Libraries are stored on this machine — no account required.	Σύρετε εδώ σχέδια, χρώματα και στυλ κειμένου για χρήση σε άλλα έγγραφα. Οι βιβλιοθήκες αποθηκεύονται στον υπολογιστή — χωρίς λογαριασμό.
 	1 Color Job	Εργασία ενός χρώματος
@@ -4986,6 +5010,7 @@ effect	Points	Σημεία
 	Load EPS into Clipboard	Φόρτωση EPS στο πρόχειρο
 @msg	unknown control `{name}`: fillStroke, coloring, drawMode or screenMode	Άγνωστο στοιχείο ελέγχου `{name}`: fillStroke, coloring, drawMode ή screenMode
 @msg	an image of {w} × {h} pixels is too large to draw	Η εικόνα {w} × {h} εικονοστοιχείων είναι υπερβολικά μεγάλη για σχεδίαση
+@msg	an image of {w} × {h} pixels is shown at reduced size	Η εικόνα {w} × {h} εικονοστοιχείων εμφανίζεται σε μειωμένο μέγεθος
 	Open Recent File 1	Άνοιγμα πρόσφατου αρχείου 1
 	Open Recent File 2	Άνοιγμα πρόσφατου αρχείου 2
 	Open Recent File 3	Άνοιγμα πρόσφατου αρχείου 3
@@ -5066,6 +5091,21 @@ effect	Points	Σημεία
 	Saved View 8	Αποθηκευμένη προβολή 8
 	Saved View 9	Αποθηκευμένη προβολή 9
 	Saved View 10	Αποθηκευμένη προβολή 10
+	Saved View 11	Αποθηκευμένη προβολή 11
+	Saved View 12	Αποθηκευμένη προβολή 12
+	Saved View 13	Αποθηκευμένη προβολή 13
+	Saved View 14	Αποθηκευμένη προβολή 14
+	Saved View 15	Αποθηκευμένη προβολή 15
+	Saved View 16	Αποθηκευμένη προβολή 16
+	Saved View 17	Αποθηκευμένη προβολή 17
+	Saved View 18	Αποθηκευμένη προβολή 18
+	Saved View 19	Αποθηκευμένη προβολή 19
+	Saved View 20	Αποθηκευμένη προβολή 20
+	Saved View 21	Αποθηκευμένη προβολή 21
+	Saved View 22	Αποθηκευμένη προβολή 22
+	Saved View 23	Αποθηκευμένη προβολή 23
+	Saved View 24	Αποθηκευμένη προβολή 24
+	Saved View 25	Αποθηκευμένη προβολή 25
 	Three Point Perspective Preset 1	Προεπιλογή προοπτικής τριών σημείων 1
 	Three Point Perspective Preset 2	Προεπιλογή προοπτικής τριών σημείων 2
 	Three Point Perspective Preset 3	Προεπιλογή προοπτικής τριών σημείων 3
@@ -5268,6 +5308,7 @@ effect	Points	Σημεία
 @msg	span: "selection" places the gradient itself: leave out `start` and `end` (they already place it in document coordinates)	span: το "selection" τοποθετεί το ίδιο το ντεγκραντέ: παραλείψτε τα `start` και `end` (το τοποθετούν ήδη σε συντεταγμένες εγγράφου)
 @msg	the Color Picker is not open	ο επιλογέας χρώματος δεν είναι ανοιχτός
 @msg	the Simplify slider is not open	ο ρυθμιστής Απλοποίησης δεν είναι ανοιχτός
+@msg	the Smooth slider is not open	ο ρυθμιστής Εξομάλυνσης δεν είναι ανοιχτός
 @msg	the action has no steps	η ενέργεια δεν έχει βήματα
 @msg	the file's layers weren't read ({_1}): it comes in as its page, in one layer	τα επίπεδα του αρχείου δεν διαβάστηκαν ({_1}): εισάγεται ως η σελίδα του, σε ένα επίπεδο
 @msg	the file's layers weren't read from its editing data ({_1}): they come from its PDF part	τα επίπεδα του αρχείου δεν διαβάστηκαν από τα δεδομένα επεξεργασίας του ({_1}): προέρχονται από το τμήμα PDF του
@@ -5510,6 +5551,39 @@ axis	Y Axis	Άξονας Y
 	Rectangular Grid Tool Options	Επιλογές εργαλείου ορθογώνιου πλέγματος
 	Polar Grid Tool Options	Επιλογές εργαλείου πολικού πλέγματος
 	Fill Line	Γέμισμα γραμμής
+	Pathfinder Options	Επιλογές Pathfinder
+	Divide and Outline Will Remove Unpainted Artwork	Η Διαίρεση και το Περίγραμμα αφαιρούν τα γραφικά χωρίς χρώμα
+@msg	precision must be from 0.001 to 10 pt	το precision πρέπει να είναι από 0,001 έως 10 pt
+@msg	`pathfinder` must be an object	Το `pathfinder` πρέπει να είναι αντικείμενο
+	Add to Brushes	Προσθήκη στα πινέλα
+	Brush Library	Βιβλιοθήκη πινέλων
+	Save Brush Library	Αποθήκευση βιβλιοθήκης πινέλων
+	Save Brushes…	Αποθήκευση πινέλων…
+	Open Brush Library	Άνοιγμα βιβλιοθήκης πινέλων
+	Selected Brushes Only	Μόνο επιλεγμένα πινέλα
+	Brush Libraries Menu	Μενού βιβλιοθηκών πινέλων
+	User Brush Library 1	Βιβλιοθήκη πινέλων χρήστη 1
+	User Brush Library 2	Βιβλιοθήκη πινέλων χρήστη 2
+	User Brush Library 3	Βιβλιοθήκη πινέλων χρήστη 3
+	User Brush Library 4	Βιβλιοθήκη πινέλων χρήστη 4
+	User Brush Library 5	Βιβλιοθήκη πινέλων χρήστη 5
+	User Brush Library 6	Βιβλιοθήκη πινέλων χρήστη 6
+	User Brush Library 7	Βιβλιοθήκη πινέλων χρήστη 7
+	User Brush Library 8	Βιβλιοθήκη πινέλων χρήστη 8
+	User Brush Library 9	Βιβλιοθήκη πινέλων χρήστη 9
+	User Brush Library 10	Βιβλιοθήκη πινέλων χρήστη 10
+	Art Ribbons	Γραφικές κορδέλες
+	Calligraphic Nibs	Καλλιγραφικές πένες
+	Pattern Borders	Περιθώρια μοτίβου
+	Scatter Shapes	Σχήματα διασποράς
+	Save Brush Library…	Αποθήκευση βιβλιοθήκης πινέλων…
+@msg	`{_1}` has no brushes to apply	Η `{_1}` δεν έχει πινέλα για εφαρμογή
+@msg	missing `library` (see brush.libraries)	λείπει το `library` (δείτε brush.libraries)
+@msg	no brush `{n}`	δεν υπάρχει πινέλο `{n}`
+@msg	no brush `{n}` in `{_1}`	δεν υπάρχει πινέλο `{n}` στη `{_1}`
+@msg	no brush library `{key}` (see brush.libraries)	δεν υπάρχει βιβλιοθήκη πινέλων `{key}` (δείτε brush.libraries)
+@msg	the document has no brushes to save	το έγγραφο δεν έχει πινέλα για αποθήκευση
+@msg	no empty artboards to delete	δεν υπάρχουν κενοί πίνακες σχεδίασης για διαγραφή
 	Scale Presets	Προεπιλογές κλίμακας
 @msg	a {width}×{height} screenshot's byte count overflows	το πλήθος byte ενός στιγμιότυπου {width}×{height} υπερχειλίζει
 @msg	the window's {what} ({points} points × {scale} DPI) cannot size a screenshot	το {what} του παραθύρου ({points} σημεία × {scale} DPI) δεν μπορεί να καθορίσει μέγεθος στιγμιότυπου

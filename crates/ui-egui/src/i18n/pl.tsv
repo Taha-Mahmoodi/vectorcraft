@@ -74,6 +74,7 @@
 	Check Script	Sprawdź skrypt
 	Other Script…	Inny skrypt…
 	Document Setup…	Ustawienia dokumentu…
+	Switch Units	Przełącz jednostki
 	Document Color Mode	Tryb koloru dokumentu
 	CMYK Color	Kolor CMYK
 	RGB Color	Kolor RGB
@@ -155,6 +156,7 @@
 	Other Layers	Pozostałe warstwy
 	Unlock All	Odblokuj wszystko
 	Hide	Ukryj
+	Unselected Artwork	Niezaznaczoną kompozycję
 	Show All	Pokaż wszystko
 	Expand…	Rozszerz…
 	Expand Appearance	Rozszerz wygląd
@@ -188,6 +190,7 @@
 	Offset Path…	Odsuń ścieżkę…
 	Reverse Path Direction	Odwróć kierunek ścieżki
 	Simplify…	Uprość…
+	Smooth…	Wygładź…
 	Add Anchor Points	Dodaj punkty kontrolne
 	Remove Anchor Points	Usuń punkty kontrolne
 	Divide Objects Below	Podziel obiekty poniżej
@@ -288,6 +291,7 @@
 	Apply Bullets	Zastosuj punktory
 	Numbered List	Lista numerowana
 	Apply Numbers	Zastosuj numerację
+	Convert to Text	Konwertuj na tekst
 	Filled Dot	Pełna kropka
 	Dash	Myślnik
 	Hollow Circle	Pusty okrąg
@@ -334,6 +338,7 @@
 	Create	Utwórz
 	Release Selection	Uwolnij zaznaczenie
 	Remove Threading	Usuń wątki
+	Break Thread	Przerwij wątek
 	Fit Headline	Dopasuj nagłówek
 	Find Font…	Znajdź czcionkę…
 	Change Case	Zmień wielkość liter
@@ -556,6 +561,21 @@
 	Saved View 8	Zapisany widok 8
 	Saved View 9	Zapisany widok 9
 	Saved View 10	Zapisany widok 10
+	Saved View 11	Zapisany widok 11
+	Saved View 12	Zapisany widok 12
+	Saved View 13	Zapisany widok 13
+	Saved View 14	Zapisany widok 14
+	Saved View 15	Zapisany widok 15
+	Saved View 16	Zapisany widok 16
+	Saved View 17	Zapisany widok 17
+	Saved View 18	Zapisany widok 18
+	Saved View 19	Zapisany widok 19
+	Saved View 20	Zapisany widok 20
+	Saved View 21	Zapisany widok 21
+	Saved View 22	Zapisany widok 22
+	Saved View 23	Zapisany widok 23
+	Saved View 24	Zapisany widok 24
+	Saved View 25	Zapisany widok 25
 	Window	Okno
 	New Window	Nowe okno
 	Cascade	Kaskadowo
@@ -747,6 +767,10 @@
 	Shaper	Kształtowanie
 	Expand Shaper Group	Rozszerz grupę kształtowania
 	Release Shaper Group	Uwolnij grupę kształtowania
+	Remove from Shaper Group	Usuń z grupy kształtowania
+@msg	source must be the id of a Shaper Group's original shape	source musi być identyfikatorem oryginalnego kształtu grupy kształtowania
+@msg	group must be the id of a Shaper Group	group musi być identyfikatorem grupy kształtowania
+@msg	the shape is not an editable original shape of that Shaper Group	kształt nie jest edytowalnym oryginalnym kształtem tej grupy kształtowania
 	Select Shaper Face	Zaznacz ścianę kształtowania
 	Constrain	Ogranicz
 	Free Transform	Swobodne przekształcanie
@@ -1256,6 +1280,7 @@ lighting	Light	Światło
 	Hide Thumbnail	Ukryj miniaturę
 	Mixed Appearances	Różne wyglądy
 	Mixed Objects	Różne obiekty
+	Mixed	Mieszane
 	No options	Brak opcji
 	No Selection	Brak zaznaczenia
 	Offset X	Odsunięcie X
@@ -1298,7 +1323,6 @@ lighting	Light	Światło
 	URL:	URL:
 	Use Even-Odd Fill Rule	Użyj reguły wypełniania parzysty-nieparzysty
 	Use Non-Zero Winding Fill Rule	Użyj reguły wypełniania niezerowego
-	Brush Libraries (on the roadmap)	Biblioteki pędzli (w planach)
 	List View	Widok listy
 	New Art Brush from Selection	Nowy pędzel artystyczny z zaznaczenia
 	New Bristle Brush	Nowy pędzel włosiankowy
@@ -1657,6 +1681,7 @@ lighting	Light	Światło
 	Show Original Path	Pokaż oryginalną ścieżkę
 	Open this dialog with these settings next time	Następnym razem otwórz to okno dialogowe z tymi ustawieniami
 	Auto-Simplify	Uprość automatycznie
+	Auto-Smooth	Wygładź automatycznie
 	Transparency Options	Opcje przezroczystości
 	Color Mixer (Shift-click the chip)	Mikser kolorów (kliknij próbkę z Shift)
 	Fill: click for swatches, Shift-click for the color mixer	Wypełnienie: kliknij, aby wybrać próbkę, z Shift — mikser kolorów
@@ -1867,6 +1892,8 @@ lighting	Light	Światło
 	Repeat Tab	Powtórz tabulator
 	Right-Justified Tab	Tabulator prawy
 	Top-Justified Tab	Tabulator górny
+	X:	X:
+	Y:	Y:
 	Select a text object to set its tab stops.	Zaznacz obiekt tekstowy, aby ustawić jego tabulatory.
 	Select text	Zaznacz tekst
 	Snap to Unit	Przyciągaj do jednostek
@@ -1970,6 +1997,10 @@ lighting	Light	Światło
 	Outer Corner Tile	Kafelek narożnika zewnętrznego
 	Side Tile	Kafelek boczny
 	Inner Corner Tile	Kafelek narożnika wewnętrznego
+	Auto-Centered	Auto-wyśrodkowany
+	Auto-Between	Auto-pomiędzy
+	Auto-Sliced	Auto-cięty
+	Auto-Overlap	Auto-nakładanie
 	Start Tile	Kafelek początkowy
 	End Tile	Kafelek końcowy
 	Fit	Dopasowanie
@@ -4029,6 +4060,7 @@ imageTrace	Outline	Kontur
 @msg	`{key}` must be between {min} and {max} (got {x})	`{key}` musi mieścić się w zakresie od {min} do {max} (podano {x})
 @msg	`{key}` must be one of {_1}	`{key}` musi mieć jedną z wartości: {_1}
 @msg	`{key}` must be true or false	`{key}` musi mieć wartość true lub false
+@msg	`top` and `below` can't both be true	`top` i `below` nie mogą mieć jednocześnie wartości true
 @msg	`select` must be true or false	`select` musi mieć wartość true lub false
 @msg	`minAnchors` and `maxAnchors` must be whole numbers	`minAnchors` i `maxAnchors` muszą być liczbami całkowitymi
 @msg	`{key}` must be a number not below 0	`{key}` musi być liczbą nie mniejszą niż 0
@@ -4106,6 +4138,7 @@ imageTrace	Outline	Kontur
 @msg	videoRulerPixelAspectRatio must be a number from 0.1 to 10	videoRulerPixelAspectRatio musi być liczbą od 0,1 do 10
 @msg	the Color Picker is not open	Próbnik kolorów nie jest otwarty
 @msg	the Simplify slider is not open	Suwak Uprość nie jest otwarty
+@msg	the Smooth slider is not open	Suwak Wygładź nie jest otwarty
 @msg	the screen color sampler is already open	narzędzie do pobierania koloru z ekranu jest już otwarte
 @msg	this system has no screen color sampler	ten system nie ma narzędzia do pobierania koloru z ekranu
 @msg	bad colour `{hex}` (#rrggbb)	nieprawidłowy kolor `{hex}` (#rrggbb)
@@ -4178,6 +4211,7 @@ imageTrace	Outline	Kontur
 @msg	missing `id` (see plugin.list)	brak `id` (patrz plugin.list)
 @msg	missing `name`	brak `name`
 @msg	missing `tool`	brak `tool`
+@msg	missing id	brak id
 @msg	missing index	brak indeksu
 @msg	missing number `{key}`	brak liczby `{key}`
 @msg	missing integer `{key}`	brak liczby całkowitej `{key}`
@@ -4210,6 +4244,7 @@ imageTrace	Outline	Kontur
 @msg	no current layer	brak bieżącej warstwy
 @msg	no data	brak danych
 @msg	no dialog open	brak otwartego okna dialogowego
+@msg	the open dialog has no Reset	otwarte okno dialogowe nie ma przycisku Resetuj
 @msg	no document	brak dokumentu
 @msg	no document open	brak otwartego dokumentu
 @msg	no effect applied yet	nie zastosowano jeszcze żadnego efektu
@@ -4293,6 +4328,7 @@ imageTrace	Outline	Kontur
 @msg	not in pattern editing mode	nie jest w trybie edycji wzorka
 @msg	nothing encoded	nic nie zakodowano
 @msg	nothing selected	nic nie zaznaczono
+@msg	nothing selected is in a group	nic z zaznaczenia nie należy do grupy
 @msg	nothing to align	nie ma czego wyrównać
 @msg	nothing to distort	nie ma czego zniekształcić
 @msg	nothing to export: the document has no visible art (or turn on Use Artboards)	nie ma czego eksportować: dokument nie ma widocznej kompozycji (lub włącz Użyj obszarów kompozycji)
@@ -4367,6 +4403,7 @@ imageTrace	Outline	Kontur
 @msg	select an object in perspective	zaznacz obiekt w perspektywie
 @msg	select artwork (or a colour group) to recolor	zaznacz kompozycję (lub grupę kolorów), aby zmienić kolory
 @msg	select at least two objects	zaznacz co najmniej dwa obiekty
+@msg	exit isolation mode first	najpierw wyjdź z trybu izolacji
 @msg	select objects, not layers	zaznacz obiekty, nie warstwy
 @msg	select one path, or give its `id`	zaznacz jedną ścieżkę lub podaj jej `id`
 @msg	select paths to join	zaznacz ścieżki do połączenia
@@ -4419,10 +4456,14 @@ imageTrace	Outline	Kontur
 @msg	the layer or group is locked	warstwa lub grupa jest zablokowana
 @msg	the guide is on a hidden or locked layer	linia pomocnicza jest na ukrytej lub zablokowanej warstwie
 @msg	the target layer is locked or hidden	warstwa docelowa jest zablokowana lub ukryta
+@msg	the object is hidden or locked	obiekt jest ukryty lub zablokowany
+@msg	the object is outside the isolated group	obiekt znajduje się poza izolowaną grupą
+@msg	type objects can't be isolated	obiektów tekstowych nie można izolować
 @msg	the layer to flatten into is hidden	warstwa, na którą ma nastąpić spłaszczenie, jest ukryta
 @msg	the object already has an opacity mask	obiekt ma już maskę krycia
 @msg	the object has no geometry	obiekt nie ma geometrii
 @msg	the object has no opacity mask	obiekt nie ma maski krycia
+@msg	stop editing the opacity mask first	najpierw zakończ edycję maski krycia
 @msg	the object has no stroke	obiekt nie ma obrysu
 @msg	the object is beyond the plane's horizon	obiekt jest za horyzontem płaszczyzny
 @msg	the object isn't in perspective	obiekt nie jest w perspektywie
@@ -4492,6 +4533,7 @@ imageTrace	Outline	Kontur
 @msg	{_1} is already used by {_2}	{_1} jest już używany przez {_2}
 @msg	{_1} is reserved by the system	Skrót {_1} jest zarezerwowany przez system
 @msg	{_1} linked file(s) can't be read here: their previews show	połączonych plików nie można tu odczytać ({_1}): wyświetlane są ich podglądy
+@msg	{undecoded} image(s) couldn't be decoded and show as crossed boxes	nie udało się zdekodować obrazów ({undecoded}): są wyświetlane jako przekreślone ramki
 @msg	{_1} linked image(s) changed on disk: Update Links shows the new versions	połączone obrazy zmienione na dysku: {_1} — Aktualizuj łącza pokaże nowe wersje
 @msg	{_1}: not saved, so not closed	{_1}: nie zapisano, więc nie zamknięto
 @msg	{bpp}-bit bitmaps can't be read	nie można odczytać bitmap {bpp}-bitowych
@@ -5059,6 +5101,7 @@ mark-style	Japanese	Japońskie
 @msg	unknown parameter `{key}`; the command takes: {keys}	nieznany parametr `{key}`; polecenie przyjmuje: {keys}
 	Load EPS into Clipboard	Wczytaj EPS do schowka
 @msg	an image of {w} × {h} pixels is too large to draw	obraz o wymiarach {w} × {h} pikseli jest zbyt duży, aby go narysować
+@msg	an image of {w} × {h} pixels is shown at reduced size	obraz o wymiarach {w} × {h} pikseli jest wyświetlany w zmniejszonym rozmiarze
 	Basic	Podstawowy
 	Fill and Stroke Controls	Elementy sterujące wypełnieniem i obrysem
 	Coloring Controls	Elementy sterujące kolorem
@@ -5410,6 +5453,39 @@ axis	Y Axis	Oś Y
 	Rectangular Grid Tool Options	Opcje narzędzia Siatka prostokątna
 	Polar Grid Tool Options	Opcje narzędzia Siatka biegunowa
 	Fill Line	Wypełnij odcinek
+	Pathfinder Options	Opcje odnajdywania ścieżek
+	Divide and Outline Will Remove Unpainted Artwork	Podziel i Kontur usuwają niepomalowaną grafikę
+@msg	precision must be from 0.001 to 10 pt	precision musi wynosić od 0,001 do 10 pt
+@msg	`pathfinder` must be an object	`pathfinder` musi być obiektem
+	Add to Brushes	Dodaj do pędzli
+	Brush Library	Biblioteka pędzli
+	Save Brush Library	Zapisz bibliotekę pędzli
+	Save Brushes…	Zapisz pędzle…
+	Open Brush Library	Otwórz bibliotekę pędzli
+	Selected Brushes Only	Tylko zaznaczone pędzle
+	Brush Libraries Menu	Menu bibliotek pędzli
+	User Brush Library 1	Biblioteka pędzli użytkownika 1
+	User Brush Library 2	Biblioteka pędzli użytkownika 2
+	User Brush Library 3	Biblioteka pędzli użytkownika 3
+	User Brush Library 4	Biblioteka pędzli użytkownika 4
+	User Brush Library 5	Biblioteka pędzli użytkownika 5
+	User Brush Library 6	Biblioteka pędzli użytkownika 6
+	User Brush Library 7	Biblioteka pędzli użytkownika 7
+	User Brush Library 8	Biblioteka pędzli użytkownika 8
+	User Brush Library 9	Biblioteka pędzli użytkownika 9
+	User Brush Library 10	Biblioteka pędzli użytkownika 10
+	Art Ribbons	Wstęgi artystyczne
+	Calligraphic Nibs	Stalówki kaligraficzne
+	Pattern Borders	Obramowania wzorków
+	Scatter Shapes	Kształty rozproszone
+	Save Brush Library…	Zapisz bibliotekę pędzli…
+@msg	`{_1}` has no brushes to apply	`{_1}` nie ma pędzli do zastosowania
+@msg	missing `library` (see brush.libraries)	brak `library` (zobacz brush.libraries)
+@msg	no brush `{n}`	brak pędzla `{n}`
+@msg	no brush `{n}` in `{_1}`	brak pędzla `{n}` w `{_1}`
+@msg	no brush library `{key}` (see brush.libraries)	brak biblioteki pędzli `{key}` (zobacz brush.libraries)
+@msg	the document has no brushes to save	dokument nie ma pędzli do zapisania
+@msg	no empty artboards to delete	brak pustych obszarów kompozycji do usunięcia
 	Scale Presets	Ustawienia wstępne skali
 @msg	a {width}×{height} screenshot's byte count overflows	liczba bajtów zrzutu ekranu {width}×{height} przekracza limit
 @msg	the window's {what} ({points} points × {scale} DPI) cannot size a screenshot	{what} okna ({points} punktów × {scale} DPI) nie pozwala ustalić rozmiaru zrzutu ekranu

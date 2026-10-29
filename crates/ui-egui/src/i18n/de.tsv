@@ -317,7 +317,6 @@ font-technology	Variable	Variabel
 	Brush Affects:	Pinsel wirkt auf:
 	Brush Definition	Pinseldefinition
 	Brush Libraries	Pinsel-Bibliotheken
-	Brush Libraries (on the roadmap)	Pinsel-Bibliotheken (geplant)
 	Brush Options…	Pinseloptionen…
 	Brush Strokes	Pinselstriche
 	Brushes	Pinsel
@@ -332,6 +331,7 @@ font-technology	Variable	Variabel
 	Apply Bullets	Aufzählungszeichen anwenden
 	Numbered List	Nummerierte Liste
 	Apply Numbers	Nummerierung anwenden
+	Convert to Text	In Text umwandeln
 	Filled Dot	Gefüllter Punkt
 	Dash	Strich
 	Hollow Circle	Leerer Kreis
@@ -1865,6 +1865,7 @@ file-filter	Templates	Vorlagen
 	Miter Limit:	Gehrungsgrenze:
 	Mixed Appearances	Gemischtes Aussehen
 	Mixed Objects	Gemischte Objekte
+	Mixed	Gemischt
 	Mode:	Modus:
 	Model	Modell
 	Modified	Geändert
@@ -2567,6 +2568,7 @@ mark-style	Japanese	Japanisch
 	Remove Plug-in	Plug-in entfernen
 	Remove Selected Assets	Ausgewählte Assets entfernen
 	Remove Threading	Verkettung entfernen
+	Break Thread	Verkettung trennen
 	Remove “{keyword}”	„{keyword}“ entfernen
 	Rename	Umbenennen
 	Rename Asset	Asset umbenennen
@@ -2768,7 +2770,22 @@ mark-style	Japanese	Japanisch
 	Saved to User Defined: {}	In „Benutzerdefiniert“ gespeichert: {}
 	Saved View 1	Gespeicherte Ansicht 1
 	Saved View 10	Gespeicherte Ansicht 10
+	Saved View 11	Gespeicherte Ansicht 11
+	Saved View 12	Gespeicherte Ansicht 12
+	Saved View 13	Gespeicherte Ansicht 13
+	Saved View 14	Gespeicherte Ansicht 14
+	Saved View 15	Gespeicherte Ansicht 15
+	Saved View 16	Gespeicherte Ansicht 16
+	Saved View 17	Gespeicherte Ansicht 17
+	Saved View 18	Gespeicherte Ansicht 18
+	Saved View 19	Gespeicherte Ansicht 19
 	Saved View 2	Gespeicherte Ansicht 2
+	Saved View 20	Gespeicherte Ansicht 20
+	Saved View 21	Gespeicherte Ansicht 21
+	Saved View 22	Gespeicherte Ansicht 22
+	Saved View 23	Gespeicherte Ansicht 23
+	Saved View 24	Gespeicherte Ansicht 24
+	Saved View 25	Gespeicherte Ansicht 25
 	Saved View 3	Gespeicherte Ansicht 3
 	Saved View 4	Gespeicherte Ansicht 4
 	Saved View 5	Gespeicherte Ansicht 5
@@ -2964,6 +2981,7 @@ mark-style	Japanese	Japanisch
 	Show Original Path	Originalpfad einblenden
 	Open this dialog with these settings next time	Dieses Dialogfeld nächstes Mal mit diesen Einstellungen öffnen
 	Auto-Simplify	Automatisch vereinfachen
+	Auto-Smooth	Automatisch glätten
 	Color Panel Options	Optionen für das Farbbedienfeld
 	Show Package	Paket anzeigen
 	Show Panel	Bedienfeld einblenden
@@ -3000,6 +3018,7 @@ mark-style	Japanese	Japanisch
 	Simplify	Vereinfachen
 	Simplify:	Vereinfachen:
 	Simplify…	Vereinfachen…
+	Smooth…	Glätten…
 	Simulate Colored Paper	Farbiges Papier simulieren
 	Simulate Paper	Papier simulieren
 	Double Column	Zweispaltig
@@ -3177,6 +3196,7 @@ effect	Points	Punkte
 	Swatch Options…	Farbfeldoptionen…
 	Swatch Tiles	Farbfeldkacheln
 	Swatches	Farbfelder
+	Switch Units	Einheiten wechseln
 	Switch workspace	Arbeitsbereich wechseln
 	Add Content	Inhalt hinzufügen
 	Click to apply to the selected type	Klicken, um auf den ausgewählten Text anzuwenden
@@ -3394,6 +3414,7 @@ effect	Points	Punkte
 	Unlock Guides	Hilfslinien entsperren
 	Unnamed Objects	Unbenannte Objekte
 	Unprintable margin:	Nicht druckbarer Rand:
+	Unselected Artwork	Nicht ausgewählte Grafik
 	Unshift	Verschiebung aufheben
 	Untitled	Unbenannt
 	Update Link	Verknüpfung aktualisieren
@@ -3828,6 +3849,7 @@ theme	Appearance	Erscheinungsbild
 @msg	`{key}` must be between {min} and {max} (got {x})	`{key}` muss zwischen {min} und {max} liegen (erhalten: {x})
 @msg	`{key}` must be one of {_1}	`{key}` muss einer der folgenden Werte sein: {_1}
 @msg	`{key}` must be true or false	`{key}` muss true oder false sein
+@msg	`top` and `below` can't both be true	`top` und `below` können nicht beide true sein
 @msg	`select` must be true or false	`select` muss true oder false sein
 @msg	`minAnchors` and `maxAnchors` must be whole numbers	`minAnchors` und `maxAnchors` müssen ganze Zahlen sein
 @msg	`{key}` must be a number not below 0	`{key}` muss eine Zahl nicht kleiner als 0 sein
@@ -3905,6 +3927,7 @@ theme	Appearance	Erscheinungsbild
 @msg	videoRulerPixelAspectRatio must be a number from 0.1 to 10	videoRulerPixelAspectRatio muss eine Zahl von 0,1 bis 10 sein
 @msg	the Color Picker is not open	der Farbwähler ist nicht geöffnet
 @msg	the Simplify slider is not open	der Regler „Vereinfachen“ ist nicht geöffnet
+@msg	the Smooth slider is not open	der Regler „Glätten“ ist nicht geöffnet
 @msg	the screen color sampler is already open	die Farbaufnahme vom Bildschirm ist bereits geöffnet
 @msg	this system has no screen color sampler	dieses System hat keine Farbaufnahme vom Bildschirm
 @msg	bad colour `{hex}` (#rrggbb)	ungültige Farbe `{hex}` (#rrggbb)
@@ -3977,6 +4000,7 @@ theme	Appearance	Erscheinungsbild
 @msg	missing `id` (see plugin.list)	`id` fehlt (siehe plugin.list)
 @msg	missing `name`	`name` fehlt
 @msg	missing `tool`	`tool` fehlt
+@msg	missing id	id fehlt
 @msg	missing index	der Index fehlt
 @msg	missing number `{key}`	die Zahl `{key}` fehlt
 @msg	missing integer `{key}`	die ganze Zahl `{key}` fehlt
@@ -4010,6 +4034,7 @@ theme	Appearance	Erscheinungsbild
 @msg	no current layer	keine aktuelle Ebene
 @msg	no data	keine Daten
 @msg	no dialog open	kein Dialogfeld geöffnet
+@msg	the open dialog has no Reset	das geöffnete Dialogfeld hat keine Schaltfläche „Zurücksetzen“
 @msg	no document	kein Dokument
 @msg	no document open	kein Dokument geöffnet
 @msg	no effect applied yet	noch kein Effekt angewendet
@@ -4092,6 +4117,7 @@ theme	Appearance	Erscheinungsbild
 @msg	not in pattern editing mode	nicht im Musterbearbeitungsmodus
 @msg	nothing encoded	nichts kodiert
 @msg	nothing selected	nichts ausgewählt
+@msg	nothing selected is in a group	nichts Ausgewähltes befindet sich in einer Gruppe
 @msg	nothing to align	nichts auszurichten
 @msg	nothing to distort	nichts zu verzerren
 @msg	nothing to export: the document has no visible art (or turn on Use Artboards)	nichts zu exportieren: Das Dokument enthält keine sichtbare Grafik (oder aktivieren Sie „Zeichenflächen verwenden“)
@@ -4165,6 +4191,7 @@ theme	Appearance	Erscheinungsbild
 @msg	select an object in perspective	wählen Sie ein Objekt in der Perspektive aus
 @msg	select artwork (or a colour group) to recolor	wählen Sie eine Grafik (oder eine Farbgruppe) zum Neufärben aus
 @msg	select at least two objects	wählen Sie mindestens zwei Objekte aus
+@msg	exit isolation mode first	beenden Sie zuerst den Isolationsmodus
 @msg	select objects, not layers	wählen Sie Objekte aus, keine Ebenen
 @msg	select one path, or give its `id`	wählen Sie einen Pfad aus oder geben Sie seine `id` an
 @msg	select paths to join	wählen Sie Pfade zum Zusammenfügen aus
@@ -4217,10 +4244,14 @@ theme	Appearance	Erscheinungsbild
 @msg	the layer or group is locked	die Ebene oder Gruppe ist gesperrt
 @msg	the guide is on a hidden or locked layer	die Hilfslinie liegt auf einer ausgeblendeten oder gesperrten Ebene
 @msg	the target layer is locked or hidden	die Zielebene ist gesperrt oder ausgeblendet
+@msg	the object is hidden or locked	das Objekt ist ausgeblendet oder gesperrt
+@msg	the object is outside the isolated group	das Objekt liegt außerhalb der isolierten Gruppe
+@msg	type objects can't be isolated	Textobjekte können nicht isoliert werden
 @msg	the layer to flatten into is hidden	die Ebene, auf die reduziert werden soll, ist ausgeblendet
 @msg	the object already has an opacity mask	das Objekt hat bereits eine Deckkraftmaske
 @msg	the object has no geometry	das Objekt hat keine Geometrie
 @msg	the object has no opacity mask	das Objekt hat keine Deckkraftmaske
+@msg	stop editing the opacity mask first	beenden Sie zuerst die Bearbeitung der Deckkraftmaske
 @msg	the object has no stroke	das Objekt hat keine Kontur
 @msg	the object is beyond the plane's horizon	das Objekt liegt jenseits des Horizonts der Perspektivebene
 @msg	the object isn't in perspective	das Objekt ist nicht in der Perspektive
@@ -4290,6 +4321,7 @@ theme	Appearance	Erscheinungsbild
 @msg	{_1} is already used by {_2}	{_1} wird bereits von {_2} verwendet
 @msg	{_1} is reserved by the system	{_1} ist vom System reserviert
 @msg	{_1} linked file(s) can't be read here: their previews show	{_1} verknüpfte Datei(en) können hier nicht gelesen werden: Ihre Vorschauen werden angezeigt
+@msg	{undecoded} image(s) couldn't be decoded and show as crossed boxes	{undecoded} Bild(er) konnten nicht dekodiert werden und werden als durchgekreuzte Rahmen angezeigt
 @msg	{_1} linked image(s) changed on disk: Update Links shows the new versions	{_1} verknüpfte(s) Bild(er) wurde(n) auf dem Datenträger geändert: „Verknüpfungen aktualisieren“ zeigt die neuen Versionen
 @msg	{_1}: not saved, so not closed	{_1}: nicht gespeichert, daher nicht geschlossen
 @msg	{bpp}-bit bitmaps can't be read	{bpp}-Bit-Bitmaps können nicht gelesen werden
@@ -4408,6 +4440,10 @@ theme	Appearance	Erscheinungsbild
 	Shaper	Shaper
 	Expand Shaper Group	Shaper-Gruppe umwandeln
 	Release Shaper Group	Shaper-Gruppe zurückwandeln
+	Remove from Shaper Group	Aus Shaper-Gruppe entfernen
+@msg	source must be the id of a Shaper Group's original shape	source muss die ID einer Originalform einer Shaper-Gruppe sein
+@msg	group must be the id of a Shaper Group	group muss die ID einer Shaper-Gruppe sein
+@msg	the shape is not an editable original shape of that Shaper Group	die Form ist keine bearbeitbare Originalform dieser Shaper-Gruppe
 	Select Shaper Face	Shaper-Teilfläche auswählen
 	Drag art, colors and text styles here to reuse them across documents. Libraries are stored on this machine — no account required.	Ziehen Sie Grafiken, Farben und Textformate hierher, um sie in mehreren Dokumenten wiederzuverwenden. Bibliotheken werden auf diesem Computer gespeichert – kein Konto erforderlich.
 	1 Color Job	1-Farben-Auftrag
@@ -4505,6 +4541,10 @@ theme	Appearance	Erscheinungsbild
 	Side Tile	Seitenkachel
 	Outer Corner Tile	Äußere Eckkachel
 	Inner Corner Tile	Innere Eckkachel
+	Auto-Centered	Auto-zentriert
+	Auto-Between	Auto-dazwischen
+	Auto-Sliced	Auto-geschnitten
+	Auto-Overlap	Auto-überlappend
 	Start Tile	Anfangskachel
 	End Tile	Endkachel
 	Fit	Einpassen
@@ -4788,6 +4828,7 @@ lighting	Light	Licht
 @msg	unknown parameter `{key}`; the command takes: {keys}	unbekannter Parameter `{key}`; der Befehl akzeptiert: {keys}
 	Load EPS into Clipboard	EPS in die Zwischenablage laden
 @msg	an image of {w} × {h} pixels is too large to draw	ein Bild mit {w} × {h} Pixeln ist zu groß, um gezeichnet zu werden
+@msg	an image of {w} × {h} pixels is shown at reduced size	ein Bild mit {w} × {h} Pixeln wird verkleinert angezeigt
 @msg	the image can't be read as a texture	das Bild kann nicht als Struktur gelesen werden
 	Basic	Basis
 	Fill and Stroke Controls	Steuerelemente für Fläche und Kontur
@@ -5140,6 +5181,39 @@ axis	Y Axis	Y-Achse
 	Rectangular Grid Tool Options	Optionen für das Rechteckiges-Raster-Werkzeug
 	Polar Grid Tool Options	Optionen für das Radiales-Raster-Werkzeug
 	Fill Line	Linie füllen
+	Pathfinder Options	Pathfinder-Optionen
+	Divide and Outline Will Remove Unpainted Artwork	„Fläche aufteilen“ und „Pfadansicht“ entfernen ungefärbtes Bildmaterial
+@msg	precision must be from 0.001 to 10 pt	precision muss zwischen 0,001 und 10 pt liegen
+@msg	`pathfinder` must be an object	`pathfinder` muss ein Objekt sein
+	Add to Brushes	Zu Pinseln hinzufügen
+	Brush Library	Pinsel-Bibliothek
+	Save Brush Library	Pinsel-Bibliothek speichern
+	Save Brushes…	Pinsel speichern…
+	Open Brush Library	Pinsel-Bibliothek öffnen
+	Selected Brushes Only	Nur ausgewählte Pinsel
+	Brush Libraries Menu	Menü „Pinsel-Bibliotheken“
+	User Brush Library 1	Benutzer-Pinsel-Bibliothek 1
+	User Brush Library 2	Benutzer-Pinsel-Bibliothek 2
+	User Brush Library 3	Benutzer-Pinsel-Bibliothek 3
+	User Brush Library 4	Benutzer-Pinsel-Bibliothek 4
+	User Brush Library 5	Benutzer-Pinsel-Bibliothek 5
+	User Brush Library 6	Benutzer-Pinsel-Bibliothek 6
+	User Brush Library 7	Benutzer-Pinsel-Bibliothek 7
+	User Brush Library 8	Benutzer-Pinsel-Bibliothek 8
+	User Brush Library 9	Benutzer-Pinsel-Bibliothek 9
+	User Brush Library 10	Benutzer-Pinsel-Bibliothek 10
+	Art Ribbons	Bildbänder
+	Calligraphic Nibs	Kalligrafie-Federn
+	Pattern Borders	Musterbordüren
+	Scatter Shapes	Streuformen
+	Save Brush Library…	Pinsel-Bibliothek speichern…
+@msg	`{_1}` has no brushes to apply	`{_1}` hat keine Pinsel zum Anwenden
+@msg	missing `library` (see brush.libraries)	`library` fehlt (siehe brush.libraries)
+@msg	no brush `{n}`	kein Pinsel `{n}`
+@msg	no brush `{n}` in `{_1}`	kein Pinsel `{n}` in `{_1}`
+@msg	no brush library `{key}` (see brush.libraries)	keine Pinsel-Bibliothek `{key}` (siehe brush.libraries)
+@msg	the document has no brushes to save	das Dokument hat keine Pinsel zum Speichern
+@msg	no empty artboards to delete	keine leeren Zeichenflächen zum Löschen
 	Scale Presets	Skalierungsvorgaben
 @msg	a {width}×{height} screenshot's byte count overflows	die Byteanzahl eines {width}×{height}-Screenshots läuft über
 @msg	the window's {what} ({points} points × {scale} DPI) cannot size a screenshot	die {what} des Fensters ({points} Punkte × {scale} DPI) kann keinen Screenshot bemessen
