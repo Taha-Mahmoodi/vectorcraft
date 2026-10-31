@@ -99,7 +99,7 @@ fn has_east_asian(t: &vectorcraft_doc::TextObject, range: Option<(usize, usize)>
     match range {
         None => chars.any(|(_, c)| vectorcraft_text::is_cjk(c)),
         Some((a, b)) if a < b => chars.any(|(p, c)| p >= a && p < b && vectorcraft_text::is_cjk(c)),
-        Some((a, _)) if a == 0 => chars.next().is_some_and(|(_, c)| vectorcraft_text::is_cjk(c)),
+        Some((0, _)) => chars.next().is_some_and(|(_, c)| vectorcraft_text::is_cjk(c)),
         Some((a, _)) => chars.find(|(p, c)| p + c.len_utf8() == a).is_some_and(|(_, c)| vectorcraft_text::is_cjk(c)),
     }
 }
